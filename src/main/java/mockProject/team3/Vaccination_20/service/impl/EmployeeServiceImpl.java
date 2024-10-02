@@ -63,8 +63,15 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
 
     @Override
     public int addEmployee(EmployeeRequestDto1 employeeRequestDto1) {
+        System.out.println(employeeRequestDto1.getIsFromUpdate());
+        if(employeeRepository.findByUsername(employeeRequestDto1.getUsername()) != null && !employeeRequestDto1.getIsFromUpdate()) {
+            return -1;
+        }
         if(employeeRequestDto1.getImage().equals("null-image")) {
             employeeRequestDto1.setImage(null);
+        }
+        if(employeeRequestDto1.getPassword().equals("null-password") && employeeRepository.findById(employeeRequestDto1.getEmployeeId()).isPresent()) {
+            employeeRequestDto1.setPassword(employeeRepository.findByEmployeeId(employeeRequestDto1.getEmployeeId()).getPassword());
         }
         Employee employee = employeeRepository.findByEmployeeId(employeeRequestDto1.getEmployeeId());
         boolean update = false;

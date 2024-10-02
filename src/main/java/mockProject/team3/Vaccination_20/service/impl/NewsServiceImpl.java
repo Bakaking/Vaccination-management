@@ -42,7 +42,7 @@ public class NewsServiceImpl implements NewsService {
         }else {
             news = newsRepository.findBySearch(searchInput, pageable);
         }
-        List<NewsResponseDto1> newsListResponse = modelMapper.map(news.getContent(), new TypeToken<List<NewsResponseDto>>(){}.getType());
+        List<NewsResponseDto1> newsListResponse = modelMapper.map(news.getContent(), new TypeToken<List<NewsResponseDto1>>(){}.getType());
         return new PageImpl<>(newsListResponse, pageable, news.getTotalElements());
     }
 

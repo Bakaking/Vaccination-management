@@ -64,4 +64,6 @@ public class EmployeeRequestDto1 {
 
     @NotBlank(message = "Password must not be blank!")
     private String password;
+
+    private Boolean isFromUpdate;
 }

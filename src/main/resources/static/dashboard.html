@@ -48,6 +48,7 @@
                     </a>
                     <!-- employee management here -->
                     <div id="employeeManagementLocation"></div>
+
                     <a class="nav-link text-black d-flex justify-content-between" data-bs-toggle="collapse"
                        data-bs-target="#customerManagement"
                        aria-expanded="false" aria-controls="customerManagement">
@@ -67,63 +68,7 @@
                             Create Customer
                         </a>
                     </div>
-                    <a class="nav-link text-black d-flex justify-content-between" data-bs-toggle="collapse"
-                       data-bs-target="#vaccineType"
-                       aria-expanded="false" aria-controls="vaccineType">
-                        <div class="fw-medium">
-                            Vaccine Type Management
-                        </div>
-                        <div>
-                            <i class="bi bi-plus"></i>
-                        </div>
-                    </a>
-                    <div class="sub-menu collapse" id="vaccineType">
-                        <a class="nav-link fw-medium" onclick="fetchVaccineType('vaccine-type-list.html')">
-                            Vaccine Type List
-                        </a>
-                        <a class="nav-link fw-medium"
-                           onclick="vaccineTypeUpdateNotPressed(); fetchVaccineType('vaccine-type-create.html');">
-                            Create Vaccine Type
-                        </a>
-                    </div>
-                    <a class="nav-link text-black d-flex justify-content-between" data-bs-toggle="collapse"
-                       data-bs-target="#vaccine"
-                       aria-expanded="false" aria-controls="vaccine">
-                        <div class="fw-medium">
-                            Vaccine Management
-                        </div>
-                        <div>
-                            <i class="bi bi-plus"></i>
-                        </div>
-                    </a>
-                    <div class="sub-menu collapse" id="vaccine">
-                        <a class="nav-link fw-medium" onclick="fetchVaccine('vaccine-list.html')">
-                            Vaccine List
-                        </a>
-                        <a class="nav-link fw-medium" onclick="fetchVaccine('create-vaccine.html')">
-                            Create Vaccine
-                        </a>
-                    </div>
-                    <a class="nav-link text-black d-flex justify-content-between" data-bs-toggle="collapse"
-                       data-bs-target="#injectionSchedule"
-                       aria-expanded="false" aria-controls="injectionSchedule">
-                        <div class="fw-medium">
-                            Injection Schedule
-                        </div>
-                        <div>
-                            <i class="bi bi-plus"></i>
-                        </div>
-                    </a>
-                    <div class="sub-menu collapse" id="injectionSchedule">
-                        <a class="nav-link fw-medium"
-                           onclick="unPressInjectionScheduleUpdateButton(); fetchInjectionSchedule('injection-schedule-list.html');">
-                            Injection Schedule List
-                        </a>
-                        <a class="nav-link fw-medium"
-                           onclick="unPressInjectionScheduleUpdateButton(); fetchInjectionSchedule('injection-schedule-create.html');">
-                            Create Injection Schedule
-                        </a>
-                    </div>
+                    <div id="vaccineTypeManagementLocation"></div>
                     <!--                    injection result-->
                     <a class="nav-link text-black d-flex justify-content-between" data-bs-toggle="collapse"
                        data-bs-target="#injectionResult"
@@ -166,27 +111,8 @@
                         </a>
                     </div>
                     <!--                    report-->
-                    <a class="nav-link text-black d-flex justify-content-between" data-bs-toggle="collapse"
-                       data-bs-target="#report"
-                       aria-expanded="false" aria-controls="report">
-                        <div class="fw-medium">
-                            Report
-                        </div>
-                        <div>
-                            <i class="bi bi-plus"></i>
-                        </div>
-                    </a>
-                    <div class="sub-menu collapse" id="report">
-                        <a class="nav-link fw-medium " href="#" onclick="fetchReport('report-injection-result.html')">
-                            Report Injection Result
-                        </a>
-                        <a class="nav-link fw-medium" href="#" onclick="fetchReport('report-customer.html')">
-                            Report Customer
-                        </a>
-                        <a class="nav-link fw-medium" href="#" onclick="fetchReport('report-vaccine.html')">
-                            Report Vaccine
-                        </a>
-                    </div>
+                    <div id="newsManagementLocation"></div>
+
 
                 </nav>
             </div>

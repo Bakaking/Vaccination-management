@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 @Data
 public class NewsResponseDto {
 
+    private String newsId;
+
     private String content;
 
     private String title;

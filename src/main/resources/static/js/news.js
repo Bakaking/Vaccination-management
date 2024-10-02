@@ -16,7 +16,7 @@ function ajaxNews(filename){
             }
         },
         error: function(xhr){
-            alert("error at /api/news/getAjax, error code: " + xhr.status);
+            console.error("error at getting ajax document for news\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
         }
     });
 }
@@ -72,7 +72,7 @@ function findNews(currentPage){
         	}
         },
         error: function(xhr){
-            alert("error at /api/news/getAjax, error code: " + xhr.status);
+            console.error("error at getting ajax document for news\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
         }
     });
 }
@@ -109,30 +109,6 @@ document.getElementById('total-entries').innerText = data.total;
         .catch(error => console.error('Error fetching news:', error));
 }
 
-function createNews() {
-    const title = prompt('Enter news title:');
-    const content = prompt('Enter news content:');
-
-    if (title && content) {
-        fetch('/api/news', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ title, content }),
-        })
-        .then(response => {
-            if (response.ok) {
-                alert('News created successfully!');
-                search(0); // Reload the news list
-            } else {
-                alert('Failed to create news.');
-            }
-        })
-        .catch(error => console.error('Error creating news:', error));
-    }
-}
-
 function updateNews() {
     const checkboxes = $(".check-boxes input[type='checkbox']:checked");
     if (checkboxes.length != 1) {
@@ -154,7 +130,7 @@ function updateNews() {
 
         },
         error: function(xhr){
-            alert("error at /api/news/findById, error code: " + xhr.status);
+            console.error("error at getting news detail for update\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
         }
     });
 }
@@ -171,32 +147,29 @@ function deleteNews() {
     };
 
     checkboxes.forEach(checkbox => {
-        idRequest.ids.push(checkbox.closest("tr").querySelector("td:nth-child(1) input").value); // Sửa 'add' thành 'push'
+        idRequest.ids.push(checkbox.closest("tr").querySelector("td:nth-child(1) input").value);
     });
-
     $.ajax({
         url: "/api/news/delete",
         method: "DELETE",
         contentType: "application/json",
         data: JSON.stringify(idRequest),
-        success: function(responseData) {
-            alert(responseData);
+        success: function(stringData) {
+            alert(stringData);
             findNews(0);
         },
         error: function(xhr) {
-            alert("Error at /api/news/delete, error code: " + xhr.status);
+            console.error("Error at deleting news\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
         }
     });
 }
 
 function saveNews() {
-    // Lấy giá trị từ form
     const newsId = $('#newsId').val().trim();
     const title = $('#title').val().trim();
     const preview = $('#preview').val().trim();
     const content = $('#content').val().trim();
 
-    // Kiểm tra nếu các trường bắt buộc có giá trị không
     if (!title || !preview || !content) {
         alert("Please fill all required fields.");
         return;
@@ -221,8 +194,22 @@ function saveNews() {
                 ajaxNews('news-list.html');
         },
         error: function(xhr) {
-            alert("An error occurred while saving news.");
-            console.error('Error:', xhr.status, xhr.statusText);
+            if(xhr.status === 400) {
+            	try {
+                    const error = JSON.parse(xhr.responseText);
+                    let validationMessage = "";
+                    let i = 0;
+                    error.errors.forEach(error => {
+                        validationMessage += ++i + "." + error.defaultMessage + "\n";
+                    });
+                    alert(error.message + " -->\n" + validationMessage);
+            	} catch (error) {
+            		console.error("an expected error occurred at create/update result\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
+            	}
+            }
+            else {
+                console.error("an expected error occurred at create/update result\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
+            }
         }
     });
 }

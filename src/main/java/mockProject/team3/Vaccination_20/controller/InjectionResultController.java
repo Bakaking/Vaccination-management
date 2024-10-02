@@ -59,7 +59,7 @@ public class InjectionResultController {
 
     @Operation(summary = "Add a new injection result")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Add injection result success!"),
+            @ApiResponse(responseCode = "200", description = "create/update injection result success!"),
             @ApiResponse(responseCode = "400", description = "Failed to add injection result!")
     })
     @PostMapping("/add")
@@ -67,6 +67,8 @@ public class InjectionResultController {
         int result = injectionResultService.addInjectionResult(injectionResultDto);
         if (result == 0) {
             return ResponseEntity.badRequest().body("Failed to add injection result!");
+        } else if (result == 2) {
+            return ResponseEntity.ok("update injection result success!");
         } else {
             return ResponseEntity.ok("Add injection result success!");
         }
@@ -118,7 +120,6 @@ public class InjectionResultController {
         if (ids == null || ids.isEmpty()) {
             return ResponseEntity.badRequest().body("No data deleted!");
         }
-
         try {
             injectionResultService.deleteInjectionResults(ids);
             return ResponseEntity.ok("Injection results deleted successfully!");

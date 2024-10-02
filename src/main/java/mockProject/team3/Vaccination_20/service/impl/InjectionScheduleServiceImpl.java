@@ -80,6 +80,9 @@ public class InjectionScheduleServiceImpl implements InjectionScheduleService {
         injectionSchedule.setVaccineFromInjectionSchedule(vaccine);
         System.out.println(injectionSchedule.getInjectionScheduleId());
         if (injectionScheduleRepository.save(injectionSchedule).getInjectionScheduleId() != null){
+            if (injectionScheduleRepository.findByInjectionScheduleId(injectionScheduleRequestDto1.getInjectionScheduleId()) != null) {
+                return 2;
+            }
             return 1;
         }
         return 0;

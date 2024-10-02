@@ -18,23 +18,24 @@
                     10
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" onclick="findAllVaccineType(0,10)">10</a></li>
-                    <li><a class="dropdown-item" onclick="findAllVaccineType(0,25)">25</a></li>
-                    <li><a class="dropdown-item" onclick="findAllVaccineType(0,50)">50</a></li>
-                    <li><a class="dropdown-item" onclick="findAllVaccineType(0,100)">100</a></li>
+                    <li><a class="dropdown-item" onclick="setPageSize(10);findAllVaccineType(0);">10</a></li>
+                    <li><a class="dropdown-item" onclick="setPageSize(25);findAllVaccineType(0);">25</a></li>
+                    <li><a class="dropdown-item" onclick="setPageSize(50);findAllVaccineType(0);">50</a></li>
+                    <li><a class="dropdown-item" onclick="setPageSize(100);findAllVaccineType(0);">100</a></li>
                 </ul>
             </div>
             <span>entries</span>
         </div>
         <!--        search -->
         <div class="search">
-            <div class="d-flex">
-                <span class="me-2">Search:</span>
-                <input type="search" name="searchInput" id="searchInput"
-                       class="border-0 border-bottom border-info" style="outline: none;"
-                       onfocus="this.style.outline = 'none';" placeholder=". . ."
-                		oninput="searchVaccineType(0)">
-            </div>
+            <form onsubmit="event.preventDefault(); findAllVaccineType(0);">
+                <div class="d-flex">
+                    <span class="me-2">Search:</span>
+                    <input type="search" name="searchInput" id="searchInput"
+                           class="border-0 border-bottom border-info" style="outline: none;"
+                           onfocus="this.style.outline = 'none';" placeholder=". . .">
+                </div>
+            </form>
         </div>
     </div>
     <!--    table show list vaccine type-->

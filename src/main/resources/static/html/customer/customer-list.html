@@ -28,11 +28,12 @@
         </div>
         <!-- search -->
         <div class="search">
+            <form onsubmit="event.preventDefault(); listCustomers(0);">
             <div class="d-flex">
                 <span class="me-2">Search:</span>
-                <input type="search" name="searchInput" id="searchInput" class="border-0 border-bottom border-info" style="outline: none;" onfocus="this.style.outline = 'none';" placeholder=". . ."
-                       oninput="listCustomers(0)">
+                <input type="search" name="searchInput" id="searchInput" class="border-0 border-bottom border-info" style="outline: none;" onfocus="this.style.outline = 'none';" placeholder=". . .">
             </div>
+            </form>
         </div>
     </div>
     <!--    table show list customers-->

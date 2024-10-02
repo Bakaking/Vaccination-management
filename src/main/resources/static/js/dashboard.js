@@ -11,6 +11,7 @@ let injectionScheduleLink = false;
 let InjectionResultUpdateBtn = false;
 let injectionResultTempId;
 let vaccineNameForDropdown;
+let employeeCancelBtn = false;
 
 function checkAllBoxes() {
     const selectAllCheckbox = $("#mother-checkbox")[0];
@@ -24,6 +25,10 @@ function dropdownPageSize(pageSize) {
 
 function backToHomePage() {
 	ajaxNews("show-news.html");
+}
+
+function setPageSize(pageSize) {
+	$("#dropdownMenuButton")[0].textContent = pageSize;
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -56,29 +61,93 @@ document.addEventListener("DOMContentLoaded", function () {
                          Create Employee
                      </a>
                  </div>`;
+				$("#vaccineTypeManagementLocation")[0].innerHTML = `
+                 <a class="nav-link text-black d-flex justify-content-between" data-bs-toggle="collapse"
+                    data-bs-target="#vaccineType"
+                    aria-expanded="false" aria-controls="vaccineType">
+                     <div class="fw-medium">
+                         Vaccine Type Management
+                     </div>
+                     <div>
+                         <i class="bi bi-plus"></i>
+                     </div>
+                 </a>
+                 <div class="sub-menu collapse" id="vaccineType">
+                     <a class="nav-link fw-medium" onclick="fetchVaccineType('vaccine-type-list.html')">
+                         Vaccine Type List
+                     </a>
+                     <a class="nav-link fw-medium"
+                        onclick="vaccineTypeUpdateNotPressed(); fetchVaccineType('vaccine-type-create.html');">
+                         Create Vaccine Type
+                     </a>
+                 </div>
+                 <a class="nav-link text-black d-flex justify-content-between" data-bs-toggle="collapse"
+                    data-bs-target="#vaccine"
+                    aria-expanded="false" aria-controls="vaccine">
+                     <div class="fw-medium">
+                         Vaccine Management
+                     </div>
+                     <div>
+                         <i class="bi bi-plus"></i>
+                     </div>
+                 </a>
+                 <div class="sub-menu collapse" id="vaccine">
+                     <a class="nav-link fw-medium" onclick="fetchVaccine('vaccine-list.html')">
+                         Vaccine List
+                     </a>
+                     <a class="nav-link fw-medium" onclick="fetchVaccine('create-vaccine.html')">
+                         Create Vaccine
+                     </a>
+                 </div>
+                 <a class="nav-link text-black d-flex justify-content-between" data-bs-toggle="collapse"
+                    data-bs-target="#injectionSchedule"
+                    aria-expanded="false" aria-controls="injectionSchedule">
+                     <div class="fw-medium">
+                         Injection Schedule
+                     </div>
+                     <div>
+                         <i class="bi bi-plus"></i>
+                     </div>
+                 </a>
+                 <div class="sub-menu collapse" id="injectionSchedule">
+                     <a class="nav-link fw-medium"
+                        onclick="unPressInjectionScheduleUpdateButton(); fetchInjectionSchedule('injection-schedule-list.html');">
+                         Injection Schedule List
+                     </a>
+                     <a class="nav-link fw-medium"
+                        onclick="unPressInjectionScheduleUpdateButton(); fetchInjectionSchedule('injection-schedule-create.html');">
+                         Create Injection Schedule
+                     </a>
+                 </div>`;
+                 $("#newsManagementLocation")[0].innerHTML = `
+                 	<a class="nav-link text-black d-flex justify-content-between" data-bs-toggle="collapse"
+                       data-bs-target="#report"
+                       aria-expanded="false" aria-controls="report">
+                        <div class="fw-medium">
+                            Report
+                        </div>
+                        <div>
+                            <i class="bi bi-plus"></i>
+                        </div>
+                    </a>
+                    <div class="sub-menu collapse" id="report">
+                        <a class="nav-link fw-medium " href="#" onclick="fetchReport('report-injection-result.html')">
+                            Report Injection Result
+                        </a>
+                        <a class="nav-link fw-medium" href="#" onclick="fetchReport('report-customer.html')">
+                            Report Customer
+                        </a>
+                        <a class="nav-link fw-medium" href="#" onclick="fetchReport('report-vaccine.html')">
+                            Report Vaccine
+                        </a>
+                    </div>
+                 `;
 			} else {
 				$("#userEmail")[0].innerHTML = user.email;
 			}
 		},
 		error: function(xhr) {
-			alert("error fetching current username!");
-			console.error("Error fetching current username!", xhr.status);
+			console.error("Error fetching current username!\nerror code:" + xhr.status + "\nerror message: " + xhr.responseText);
 		}
 	});
-
-	// get current user role
-//	$.ajax({
-//    		url: "/api/user/getRole",
-//    		method: "GET",
-//    		success: function(role) {
-//                if(role === "employee") {
-//                    $("#employeeManagementTitle").addClass("d-none");
-//                }
-//    		},
-//    		error: function(xhr) {
-//    			alert("error fetching current user role!");
-//    			console.error("Error fetching current role!", xhr.status);
-//    		}
-//    	});
-
 });

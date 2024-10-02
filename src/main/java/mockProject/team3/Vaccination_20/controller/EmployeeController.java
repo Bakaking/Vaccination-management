@@ -92,6 +92,9 @@ public class EmployeeController {
         else if(serviceResponse == 1) {
             return ResponseEntity.ok().body("New employee added successfully!");
         }
+        else if(serviceResponse == -1) {
+            return ResponseEntity.badRequest().body("username already exists, please try again!");
+        }
         else {
             return ResponseEntity.ok().body("employee updated successfully!");
         }

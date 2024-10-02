@@ -67,8 +67,16 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public boolean addCustomer(CustomerRequestDto1 customerRequestDto1) {
+        if(customerRepository.findById(customerRequestDto1.getCustomerId()).orElse(null) != null) {
+            if(customerRequestDto1.getPassword().equals("null-password-null")) {
+                customerRequestDto1.setPassword(null);
+            }
+        }
         try {
             Customer customer = modelMapper.map(customerRequestDto1, Customer.class);
+            if (customer.getPassword() == null) {
+                customer.setPassword(customerRepository.findById(customerRequestDto1.getCustomerId()).get().getPassword());
+            }
             customer.setPassword(passwordEncoder.encode(customer.getPassword()));
             customerRepository.save(customer);
             return true;

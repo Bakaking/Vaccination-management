@@ -26,16 +26,17 @@
             <span>entries</span>
         </div>
         <div class="search">
-            <div class="d-flex">
-                <span class="me-2">Search:</span>
-                <input type="search" name="searchInput"
-                       id="searchInput"
-                       class="border-0 border-bottom border-info"
-                       style="outline: none;"
-                       onfocus="this.style.outline = 'none';"
-                       placeholder=". . ."
-                       oninput="findNews(0)">
-            </div>
+            <form onsubmit="event.preventDefault(); findNews(0);">
+                <div class="d-flex">
+                    <span class="me-2">Search:</span>
+                    <input type="search" name="searchInput"
+                           id="searchInput"
+                           class="border-0 border-bottom border-info"
+                           style="outline: none;"
+                           onfocus="this.style.outline = 'none';"
+                           placeholder=". . .">
+                </div>
+            </form>
         </div>
     </div>
     <div class="table-employee mt-3">

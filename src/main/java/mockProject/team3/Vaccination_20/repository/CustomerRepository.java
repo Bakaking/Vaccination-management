@@ -26,9 +26,9 @@ public interface CustomerRepository extends JpaRepository<Customer, String> {
     List<Customer> findAll();
 
     @Query("SELECT c FROM Customer c " +
-            "JOIN c.injectionResults ir " +
-            "WHERE (:fullName IS NULL OR LOWER(c.fullName) LIKE LOWER(CONCAT('%', :fullName, '%'))) " +
-            "AND (:address IS NULL OR LOWER(c.address) LIKE LOWER(CONCAT('%', :address, '%'))) " +
+            "LEFT JOIN c.injectionResults ir " +
+            "WHERE (:fullName IS NULL OR :fullName = '' OR LOWER(c.fullName) LIKE LOWER(CONCAT('%', :fullName, '%'))) " +
+            "AND (:address IS NULL OR :address = '' OR LOWER(c.address) LIKE LOWER(CONCAT('%', :address, '%'))) " +
             "AND (:fromDate IS NULL OR c.dateOfBirth >= :fromDate) " +
             "AND (:toDate IS NULL OR c.dateOfBirth <= :toDate)")
     Page<Customer> searchAllCustomerForReport(
@@ -37,4 +37,5 @@ public interface CustomerRepository extends JpaRepository<Customer, String> {
             @Param("fromDate") LocalDate fromDate,
             @Param("toDate") LocalDate toDate,
             Pageable pageable);
+
 }

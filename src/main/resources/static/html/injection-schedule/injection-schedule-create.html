@@ -9,6 +9,7 @@
 <body class="bg-body-secondary">
 <div class="container mt-3 bg-light p-3">
     <form id="injection-schedule-create-form" onsubmit="event.preventDefault(); addInjectionSchedule();">
+        <input type="text" id="injection-schedule-id" class="d-none" disabled>
         <!-- Row 1 -->
         <div class="d-flex justify-content-between mb-4">
             <!-- Vaccine Name -->
@@ -16,7 +17,7 @@
                 <label class="form-label fw-medium">Vaccine <span class="text-danger">(*)</span></label>
                 <div class="input-group">
                     <img src="/images/icons/vaccination.png" class="input-group-text border-0">
-                    <select class="form-select" id="vaccineName">
+                    <select class="form-select" id="vaccineName" required>
                         <option value="" disabled selected>-- Select Vaccine --</option>
                     </select>
                 </div>
@@ -26,7 +27,7 @@
                 <label class="form-label fw-medium">From <span class="text-danger">(*)</span></label>
                 <div class="input-group">
                     <img src="/images/icons/calendar.png" class="input-group-text border-0">
-                    <input type="date" class="form-control" id="from">
+                    <input type="date" class="form-control" id="from" required>
                 </div>
             </div>
             <!-- To Date -->
@@ -34,7 +35,7 @@
                 <label class="form-label fw-medium">To <span class="text-danger">(*)</span></label>
                 <div class="input-group">
                     <img src="/images/icons/calendar.png" class="input-group-text border-0">
-                    <input type="date" class="form-control" id="to">
+                    <input type="date" class="form-control" id="to" required>
                 </div>
             </div>
         </div>
@@ -45,7 +46,7 @@
             <div class="col-4">
                 <label class="form-label fw-medium">Place <span class="text-danger">(*)</span></label>
                 <div class="input-group ps-4">
-                    <textarea class="form-control" id="place"></textarea>
+                    <textarea class="form-control" id="place" required></textarea>
                 </div>
             </div>
             <!-- Note -->

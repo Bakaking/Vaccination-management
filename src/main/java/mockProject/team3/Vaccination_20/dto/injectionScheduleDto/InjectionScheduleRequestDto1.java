@@ -28,13 +28,13 @@ public class InjectionScheduleRequestDto1 {
     @NotNull(message = "End date must not be null!")
     private LocalDate endDate;
 
-    @NotNull(message = "Place must not be null!")
+    @NotBlank(message = "Place must not be null!")
     private String place;
 
     @NotNull(message = "Start date must not be null!")
     private LocalDate startDate;
 
-    @NotNull(message = "Vaccine ID must not be null!")
+    @NotBlank(message = "Vaccine ID must not be null!")
     private String vaccineId;
 
     @AssertTrue(message = "Start date must be before the end date.")
@@ -42,6 +42,6 @@ public class InjectionScheduleRequestDto1 {
         if (startDate != null && endDate != null) {
             return startDate.isBefore(endDate);
         }
-        return true; // Allow null validation to handle missing fields.
+        return true;
     }
 }

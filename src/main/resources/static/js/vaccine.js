@@ -9,7 +9,7 @@ function fetchVaccine(filename) {
                     $("#ajax-title")[0].innerHTML = "VACCINE LIST";
                     findAllVaccine(0);
                 } else if(filename === "import-vaccine.html") {
-                    $("#ajax-content")[0].innerHTML = data;
+                    $("#ajax-content")[0].innerHTML = ajaxData;
                     $("#ajax-title")[0].innerHTML = "IMPORT VACCINE";
                 } else {
                     $("#ajax-title")[0].innerHTML = "CREATE VACCINE";
@@ -22,7 +22,7 @@ function fetchVaccine(filename) {
                 }
 		},
 		error: function(xhr) {
-			alert("error at /.../getAjax\nerror: " + xhr.status + "\nmessage: " + xhr.responseText);
+			console.error("error at getting ajax document,\nerror: " + xhr.status + "\nmessage: " + xhr.responseText);
 		}
 	});
 }
@@ -67,10 +67,15 @@ function findAllVaccine(page){
 //---------------------
 //update navigation button and customize pagination
 function updatePageVaccine(currentPage, totalPages, pageSize, totalElements) {
-    document.getElementById("start-entry").innerHTML = currentPage === 0 ? 1 : currentPage * pageSize + 1;
-    document.getElementById("end-entry").innerHTML = currentPage === totalPages - 1 ? totalElements : (currentPage + 1) * pageSize;
-    document.getElementById("total-entries").innerHTML = totalElements;
-
+    if (totalElements === 0) {
+    		$("#start-entry")[0].innerHTML = 0;
+    		$("#end-entry")[0].innerHTML = 0;
+    		$("#total-entries")[0].innerHTML = 0;
+    	} else {
+            $("#start-entry")[0].innerHTML = currentPage === 0 ? 1 : currentPage * pageSize + 1;
+            $("#end-entry")[0].innerHTML = currentPage === totalPages - 1 ? totalElements : (currentPage + 1) * pageSize;
+            $("#total-entries")[0].innerHTML = totalElements;
+    	}
     const paginationContainer = document.getElementById("page-buttons");
     let pageButtons = '';
 
@@ -156,8 +161,7 @@ function loadVaccineTypeName(vaccineTypeNameParam) {
 			}
 		},
 		error: function(xhr) {
-			const error = JSON.parse(xhr.responseText);
-			alert("error at /api/vaccine-type/vt-for-add-vaccine, error message:" + error.message);
+			console.error("error at getting dropdown vaccine type list\nerror code: " + xhr.status + "\nerror message: " + xhr.statusText);
 		}
 	});
 }
@@ -190,16 +194,20 @@ function addVaccine() {
     	},
         error: function(xhr) {
             if(xhr.status === 400) {
-                const error = JSON.parse(xhr.responseText);
-                let validationMessage = "";
-                let i = 0;
-                error.errors.forEach(error => {
-                    validationMessage += ++i + "." + error.defaultMessage + "\n";
-                });
-                alert(error.message + " -->\n" + validationMessage);
+                try {
+                    const error = JSON.parse(xhr.responseText);
+                    let validationMessage = "";
+                    let i = 0;
+                    error.errors.forEach(error => {
+                        validationMessage += ++i + "." + error.defaultMessage + "\n";
+                    });
+                    alert(error.message + " -->\n" + validationMessage);
+                } catch (error) {
+                	alert(xhr.responseText);
+                }
             }
             else {
-                alert("an expected error occurred at /api/vaccine/add\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
+                console.error("an expected error occurred at create/update vaccine\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
             }
         }
     });
@@ -240,7 +248,7 @@ function updateVaccineDetail(vaccineId){
             loadVaccineTypeName(vaccine.vaccineType.vaccineTypeName);
 		},
 		error: function (xhr) {
-			alert("error: " + xhr.status + "\nmessage: " + xhr.responseText);
+			console.error("error getting vaccine\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
 		}
 	});
 }
@@ -265,8 +273,8 @@ function changeStatusSelectedVaccines(){
 			findAllVaccine(0,10);
 		},
 		error: function(xhr) {
-			alert("error: " + xhr.status + "\nmessage: " + xhr.responseText);
-			console.error(xhr.responseText);
+			alert(xhr.responseText);
+			console.error("error changing status for vaccine\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
 		}
 	});
 }
@@ -299,18 +307,20 @@ function importExcelFile(event){
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);
 
-    fetch('/api/vaccine/import/excel', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.text())
-    .then(data => {
-        alert(data);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Failed to upload and import file.');
-    });
+	$.ajax({
+		url: "/api/vaccine/import/excel",
+		method: "POST",
+		data: formData,
+		processData: false,
+        contentType: false,
+        success: function(data) {
+            alert(data);
+        },
+        error: function(xhr) {
+        	alert(xhr.responseText);
+            console.error("error at importing excel file\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
+        }
+	});
 }
 
 //export file excel

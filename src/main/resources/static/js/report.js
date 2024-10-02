@@ -4,7 +4,6 @@ function fetchReport(filename) {
         data: { filename: filename },
         dataType: "text",
         success: function(data) {
-            // Inject the response content into the DOM
             $("#ajax-content")[0].innerHTML = data;
             if (filename === "report-injection-result.html") {
                 $("#ajax-title").html("REPORT INJECTION RESULT");
@@ -297,8 +296,8 @@ function CustomerReportList(currentPage, pageSize) {
 
             updateCustomerReportPaginationControls(reports.number, reports.totalPages, pageSize, reports.totalElements);
         },
-        error: function () {
-            alert("Failed to fetch /api/report/customer/list");
+        error: function (xhr) {
+            console.error("error at getting customer list\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
         }
     });
 }
@@ -472,7 +471,7 @@ function setupDropdownForInjectionResultReport() {
             dropdownVaccineNameForInjectionResultReport();
         },
         error: function (xhr) {
-            alert("Error at /api/injection-result/displayDropdown, error code: " + xhr.status);
+            console.error("Error at /api/injection-result/displayDropdown, error code: " + xhr.status);
         }
     });
 }
@@ -559,7 +558,6 @@ function updatePageReportVaccine(currentPage, totalPages, pageSize, totalElement
     }
 
     paginationContainer.innerHTML = `<ul class="pagination">${pageButtons}</ul>`;
-    $("#dropdownMenuButton")[0].innerHTML = pageSize;
 }
 
 function resetReportInjectionResult(){
@@ -635,5 +633,4 @@ function updatePageReportIr(currentPage, totalPages, pageSize, totalElements) {
     }
 
     paginationContainer.innerHTML = `<ul class="pagination">${pageButtons}</ul>`;
-    $("#dropdownMenuButton")[0].innerHTML = pageSize;
 }

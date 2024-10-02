@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class NewsRequestDto1 {
 
+    @Size(max = 36, message = "news Id must not exceed 36 characters")
+    private String newsId;
 
     @Size(max = 4000, message = "Content must not exceed 4000 characters!")
     @NotBlank(message = "Please fill out content")

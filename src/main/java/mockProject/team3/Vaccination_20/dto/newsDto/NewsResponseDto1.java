@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -14,5 +15,5 @@ public class NewsResponseDto1 {
     private String content;
     private String preview;
     private String title;
-    private LocalDateTime postDate;
+    private LocalDate postDate;
 }

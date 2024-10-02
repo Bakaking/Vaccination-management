@@ -69,38 +69,74 @@ function listCustomers(currentPage) {
 }
 
 function updatePageCustomer(currentPage, totalPages, pageSize, totalElements) {
-	if(totalElements === 0) {
-		$("#start-entry")[0].textContent = 0;
-		$("#end-entry")[0].textContent = 0;
-		$("#total-entries")[0].textContent = 0;
+	if (totalElements === 0) {
+		$("#start-entry")[0].innerHTML = 0;
+		$("#end-entry")[0].innerHTML = 0;
+		$("#total-entries")[0].innerHTML = 0;
 	} else {
-        $("#start-entry").text(currentPage === 0 ? 1 : (currentPage * pageSize) + 1);
-        $("#end-entry").text(currentPage === totalPages - 1 ? totalElements : (currentPage + 1) * pageSize);
-        $("#total-entries").text(totalElements);
+        $("#start-entry")[0].innerHTML = currentPage === 0 ? 1 : currentPage * pageSize + 1;
+        $("#end-entry")[0].innerHTML = currentPage === totalPages - 1 ? totalElements : (currentPage + 1) * pageSize;
+        $("#total-entries")[0].innerHTML = totalElements;
 	}
 
-    const paginationContainer = $("#page-buttons");
+    const paginationContainer = $("#page-buttons")[0];
     let pageButtons = '';
 
     // Left button
     if (currentPage > 0) {
-        pageButtons += `<li class="page-item"><a class="page-link" onclick="listCustomers(${currentPage - 1})">&laquo;</a></li>`;
+        pageButtons += `<li class="page-item"><a class="page-link" onclick="listCustomers(${currentPage - 1}, ${pageSize})">&laquo;</a></li>`;
     } else {
         pageButtons += `<li class="page-item disabled"><span class="page-link">&laquo;</span></li>`;
     }
 
-	// direct page buttons
-    for (let i = 0; i < totalPages; i++) {
-        pageButtons += `<li class="page-item ${i === currentPage ? 'disabled active' : ''}"><a class="page-link" onclick="listCustomers(${i})">${i + 1}</a></li>`;
+    // Show all pages if totalPages < 10
+    if (totalPages <= 10) {
+        for (let i = 0; i < totalPages; i++) {
+            pageButtons += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" onclick="listCustomers(${i}, ${pageSize})">${i + 1}</a></li>`;
+        }
+    } else {
+        // Always show page 1 and 2
+        if (totalPages > 1) {
+            pageButtons += `<li class="page-item ${currentPage === 0 ? 'active' : ''}"><a class="page-link" onclick="listCustomers(0, ${pageSize})">1</a></li>`;
+            if (totalPages > 2) {
+                pageButtons += `<li class="page-item ${currentPage === 1 ? 'active' : ''}"><a class="page-link" onclick="listCustomers(1, ${pageSize})">2</a></li>`;
+            }
+        }
+
+        // Show page numbers around the current page with ellipses
+        if (currentPage > 2) {
+            pageButtons += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+        }
+
+        let startPage = Math.max(2, currentPage - 1);
+        let endPage = Math.min(totalPages - 3, currentPage + 1);
+
+        for (let i = startPage; i <= endPage; i++) {
+            pageButtons += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" onclick="listCustomers(${i}, ${pageSize})">${i + 1}</a></li>`;
+        }
+
+        if (currentPage < totalPages - 4) {
+            pageButtons += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+        }
+
+        // Always show the last two pages
+        if (totalPages > 2) {
+            if (totalPages > 3) {
+                pageButtons += `<li class="page-item ${currentPage === totalPages - 2 ? 'active' : ''}"><a class="page-link" onclick="listCustomers(${totalPages - 2}, ${pageSize})">${totalPages - 1}</a></li>`;
+            }
+            pageButtons += `<li class="page-item ${currentPage === totalPages - 1 ? 'active' : ''}"><a class="page-link" onclick="listCustomers(${totalPages - 1}, ${pageSize})">${totalPages}</a></li>`;
+        }
     }
 
     // Right button
     if (currentPage < totalPages - 1) {
-        pageButtons += `<li class="page-item"><a class="page-link" onclick="listCustomers(${currentPage + 1})">&raquo;</a></li>`;
+        pageButtons += `<li class="page-item"><a class="page-link" onclick="listCustomers(${currentPage + 1}, ${pageSize})">&raquo;</a></li>`;
     } else {
         pageButtons += `<li class="page-item disabled"><span class="page-link">&raquo;</span></li>`;
     }
-    paginationContainer.html(`<ul class="pagination">${pageButtons}</ul>`);
+
+    paginationContainer.innerHTML = `<ul class="pagination">${pageButtons}</ul>`;
+    $("#dropdownMenuButton")[0].innerHTML = pageSize;
 }
 
 function deleteSelectedCustomer() {
@@ -137,9 +173,9 @@ function deleteSelectedCustomer() {
                 });
                 alert(error.message + " -->\n" + validationMessage);
             } else if(xhr.status === 500) {
-            	alert("cannot delete customer: due to foreign key constraints in database!");
+            	console.error("cannot delete customer: due to internal server error!");
             } else {
-                alert("an expected error occurred at /api/customer/delete, error code: " + xhr.status);
+                console.error("an expected error occurred at deleting customer\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
             }
         }
     });
@@ -163,6 +199,9 @@ function randomizeCaptchaWithReset() {
 }
 
 function checkPassword() {
+	if(customerUpdateBtn === true) {
+		return 1;
+	}
 	if($("#customerPassword").val() != $("#customerPasswordConfirm").val()) {
 		alert("password and password confirm do not match!");
 		return 0;
@@ -198,6 +237,11 @@ function addCustomer() {
             username: $('#customerUsername').val(),
             password: $('#customerPassword').val(),
         };
+        if(customerUpdateBtn === true) {
+        	if(customer.password === "") {
+        		customer.password = "null-password-null";
+        	}
+        }
     $.ajax({
     	url: "/api/customer/add",
     	method: "POST",
@@ -223,7 +267,7 @@ function addCustomer() {
                 alert(error.message + " -->\n" + validationMessage);
             }
             else {
-                alert("an expected error occurred at /api/employee/add, error code: " + xhr.status);
+                console.error("an expected error occurred at create/update customer\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
             }
         }
     });
@@ -253,11 +297,17 @@ function updateSelectedCustomer() {
             $("#customerId")[0].value = customer.customerId;
             $("#customerId")[0].disabled = true;
             $("#customerUsername")[0].value = customer.username;
-//            $("#customerPassword")[0].value = customer.password;
+//          $("#customerPassword")[0].value = customer.password;
+			$("#customerPassword")[0].required = false;
+			$("#customerPasswordConfirm")[0].required = false;
+			$("#password-div")[0].hidden = true;
+			$("#passwordConfirm-div")[0].hidden = true;
             $("#customerEmail")[0].value = customer.email;
             $("#customerPhone")[0].value = customer.phone;
         },
-        error: function() {alert("error at /api/customer/findById")}
+        error: function(xhr) {
+        	console.error("error at finding customer to be updated\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
+        }
     });
 }
 
@@ -279,8 +329,7 @@ function showCustomerDetails(id) {
             modal.show();
 		},
 		error: function(xhr) {
-			console.log("error at /api/customer/findById/{id}: ", xhr.responseText);
-			alert("error at /api/customer/findById/{id}");
+			console.error("error at finding customer for modal display\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
 		}
 	});
 }

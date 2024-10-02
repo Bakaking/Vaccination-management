@@ -1,18 +1,20 @@
 function pressEmployeeUpdateButton() {
 	employeeUpdateBtn = true;
+
 }
 function unPressEmployeeUpdateButton() {
 	employeeUpdateBtn = false;
+	employeeCancelBtn = false;
 }
 
-function setPageSize(pageSize) {
-	$("#dropdownMenuButton")[0].textContent = pageSize;
+function pressCancel() {
+	employeeCancelBtn = true;
 }
 
 //---------------------------
 function fetchEmployee(filename) {
     const checkbox = $(".check-boxes input[type='checkbox']:checked");
-    if (employeeUpdateBtn === true) {
+    if (employeeUpdateBtn === true && employeeCancelBtn === false) {
         if (checkbox.length != 1) {
             alert("Please select only 1 employee to update!");
             return;
@@ -53,8 +55,8 @@ function fetchEmployee(filename) {
                 $("#ajax-title")[0].innerHTML = "CREATE EMPLOYEE";
             }
         },
-        error: function(error) {
-            alert("Error fetching employee document!");
+        error: function(xhr) {
+            console.error("Error fetching employee ajax document!\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
         },
         complete: function() {
             const endTime = new Date().getTime(); // Track the end time
@@ -94,14 +96,14 @@ function findAllEmployee(page) {
                     <td class="text-start text-center">${employee.gender}</td>
                     <td class="text-start text-center">${employee.phone}</td>
                     <td class="text-capitalize text-start text-center">${employee.address}</td>
-                    <td class="text-center"><img src="/api/employee/image/${employee.employeeId}" alt="image" style="height: 30px; width: 45px"></td>
+                    <td class="text-center"><img src="/api/employee/image/${employee.employeeId}" alt="image" style="height: 60px; width: 45px"></td>
                 `;
                 tableBody.appendChild(row);
             });
             updatePageEmployee(employees.number, employees.totalPages, pageSize, employees.totalElements);
     	},
-    	error: function(error) {
-    		alert("error at /api/employee/findAll: " + error);
+    	error: function(xhr) {
+    		console.error("error at finding employee list: \nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
     	}
     });
 }
@@ -141,8 +143,11 @@ function arrangeUpdateEmployeeInfoToInput(employeeId) {
 			$("#position")[0].value = employee.position;
 			$("#username")[0].value = employee.username;
 			$("#username")[0].disabled = true;
-			$("#password")[0].value = employee.password;
-			$("#password")[0].disabled = true;
+			$("#username-div")[0].hidden = true;
+//			$("#password")[0].value = employee.password;
+//			$("#password")[0].disabled = true;
+			$("#password")[0].required = false;
+			$("#password-div")[0].hidden = true;
 			$("#toggle-button")[0].hidden = true;
 			if (employee.image || employee.image != null) {
                 $("#image-preview")[0].src = "/api/employee/image/" +employee.employeeId;
@@ -152,7 +157,7 @@ function arrangeUpdateEmployeeInfoToInput(employeeId) {
             }
         },
         error: function(error) {
-            alert("error fetching update employee at /api/employee/findById");
+            console.error("error: no data for employee to be updated: \nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
         }
     });
 }
@@ -183,8 +188,7 @@ function deleteSelectedEmployee() {
             findAllEmployee(0,10);
 		},
 		error: function(xhr) {
-			alert(xhr.status);
-			console.error("An error occurred, response body: " + xhr.responseText);
+			console.error("error deleting\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
 		}
 	});
 }
@@ -210,8 +214,7 @@ function showEmployeeDetails(id) {
             modal.show();
 		},
 		error: function(xhr) {
-			console.log("error at /api/employee/detail/{id}: ", xhr.responseText);
-			alert("error at /api/employee/detail/{id}");
+			console.error("error at getting employee detail for modal\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
 		}
 	});
 }
@@ -339,6 +342,7 @@ function addEmployee() {
         position: $("#position")[0].value,
         username: $("#username")[0].value,
         password: $("#password")[0].value,
+        isFromUpdate: employeeUpdateBtn === true ? true : false,
         image: null
     };
     const imageFile = $("#image")[0].files[0];
@@ -356,6 +360,11 @@ function addEmployee() {
 }
 
 function sendEmployeeData(employee) {
+	if(employeeUpdateBtn === true) {
+		if(employee.password === "") {
+            employee.password = "null-password";
+        }
+	}
 	$.ajax({
 		url: "/api/employee/add",
 		method: "POST",
@@ -375,16 +384,20 @@ function sendEmployeeData(employee) {
 		// error: 400 and up
 		error: function(xhr) {
             if(xhr.status === 400) {
-                const error = JSON.parse(xhr.responseText);
-                let validationMessage = "";
-                let i = 0;
-                error.errors.forEach(error => {
-                    validationMessage += ++i + "." + error.defaultMessage + "\n";
-                });
-                alert(error.message + " -->\n" + validationMessage);
+                try {
+                    const error = JSON.parse(xhr.responseText);
+                    let validationMessage = "";
+                    let i = 0;
+                    error.errors.forEach(error => {
+                        validationMessage += ++i + "." + error.defaultMessage + "\n";
+                    });
+                    alert(error.message + " -->\n" + validationMessage);
+                } catch(error) {
+					 console.error("an unexpected error occurred at create/update employee\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
+                }
             }
             else {
-                alert("an unexpected error occurred at /api/employee/add, error code: " + xhr.status + "\nerror message: " + xhr.responseText);
+                console.error("an unexpected error occurred at create/update employee\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
             }
 		}
 	});
@@ -407,7 +420,7 @@ function togglePassword() {
 function resetEmployeeInput() {
     $("#image-preview")[0].style.display = 'none';
     $("#image-preview")[0].src = '/images/icons/image.png';
-	if($("#employeeId")[0].disabled === true) {
+	if(employeeUpdateBtn === true) {
         const employeeId = $("#employeeId")[0].value;
         const username = $("#username")[0].value;
         const password = $("#password")[0].value;

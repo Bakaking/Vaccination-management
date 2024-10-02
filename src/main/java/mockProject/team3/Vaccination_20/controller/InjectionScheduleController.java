@@ -67,12 +67,15 @@ public class InjectionScheduleController {
     public ResponseEntity<String> add(@Valid @RequestBody InjectionScheduleRequestDto1 injectionScheduleRequestDto1) {
         int save = injectionScheduleService.save(injectionScheduleRequestDto1);
         if (save == 1) {
-            return ResponseEntity.ok("Add success");
+            return ResponseEntity.ok("Add injection schedule successful");
         }
         if (save == -1) {
             return ResponseEntity.badRequest().body("Add fail, no vaccine found for schedule");
         }
-        return ResponseEntity.badRequest().body("Add fail");
+        if (save == 2) {
+            return ResponseEntity.ok("update injection schedule success!");
+        }
+        return ResponseEntity.badRequest().body("Add injection schedule failed");
     }
 
     @Operation(summary = "Find an injection schedule by ID")

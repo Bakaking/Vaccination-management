@@ -39,8 +39,8 @@ function fetchInjectionSchedule(filename){
             	}
             }
         },
-        error: function() {
-            alert("error add fetchInjectionSchedule function");
+        error: function(xhr) {
+            console.error("error getting ajax document for injection schedule\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
         }
     });
 }
@@ -85,8 +85,8 @@ function findAllInjectionSchedule(page){
             });
             updatePageInjectionSchedule(injectionSchedules.number, injectionSchedules.totalPages, pageSize, injectionSchedules.totalElements);
         },
-        error: function(){
-            alert("error findAll");
+        error: function(xhr){
+            console.error("error finding list of injection schedule\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
         }
     });
 }
@@ -190,7 +190,7 @@ function updateInjectionSchedule(checkboxes) {
 			findAllVaccineName();
 		},
 		error: function(xhr) {
-			alert("error at /.../findById\nerror code: " + xhr.status + "\nmessage: " + xhr.responseText);
+			console.error("error at /.../findById\nerror code: " + xhr.status + "\nmessage: " + xhr.responseText);
 		}
 	});
 }
@@ -213,9 +213,7 @@ function addInjectionSchedule(){
         data: JSON.stringify(injectionSchedule),
         success: function(stringData) {
             alert(stringData);
-            if(stringData === "Add success") {
-                resetInjectionSchedule();
-            }
+            resetInjectionSchedule();
         },
         error: function(xhr) {
             if(xhr.status === 400) {
@@ -228,7 +226,7 @@ function addInjectionSchedule(){
                 alert(error.message + " -->\n" + validationMessage);
             }
             else {
-                alert("an expected error occurred at /api/injection-schedule/add, error code: " + xhr.status);
+                console.error("an expected error occurred at create/update injection schedule\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
             }
         }
     });
@@ -255,7 +253,7 @@ function findAllVaccineName() {
 			}
 		},
 		error: function(xhr) {
-			alert("error at /.../findAllVaccineName\nerror code: " + xhr.status + "\nerror status: " + xhr.statusText + "\nerror message: " + xhr.responseText);
+			console.error("error at finding vaccine name\nerror code: " + xhr.status + "\nerror status: " + xhr.statusText + "\nerror message: " + xhr.responseText);
 		}
 	});
 }
@@ -275,8 +273,7 @@ function showInjectionScheduleDetails(idParam) {
             modal.show();
 		},
 		error: function(xhr) {
-			console.log("error at /.../findById: ", xhr.responseText);
-			alert("error at /.../findById");
+			console.error("error finding injection schedule detail\nerror code: " + xhr.status + "\nerror message: " + xhr.responseText);
 		}
 	});
 }

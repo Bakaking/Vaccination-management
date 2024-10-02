@@ -187,7 +187,7 @@ public class VaccineController {
             }
             StringBuilder responseMessage = new StringBuilder("File uploaded and data imported successfully.");
             if (!notifications.isEmpty()) {
-                responseMessage.append(" However, the following issues were found:\n");
+                responseMessage.append(" with notification:\n");
                 for (String notification : notifications) {
                     responseMessage.append(notification).append("\n");
                 }

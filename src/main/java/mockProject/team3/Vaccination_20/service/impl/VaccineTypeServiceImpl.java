@@ -77,6 +77,9 @@ public class VaccineTypeServiceImpl implements VaccineTypeService {
 
     @Override
     public int addVaccineType(VaccineTypeRequestDto1 vaccineTypeRequestDto1) {
+        if(vaccineTypeRequestDto1.getVaccineTypeImage().equals("null-image")) {
+            vaccineTypeRequestDto1.setVaccineTypeImage(null);
+        }
         VaccineType vaccineType = vaccineTypeRepository.findByVaccineTypeId(vaccineTypeRequestDto1.getVaccineTypeId());
         if(vaccineTypeRequestDto1.getVaccineTypeImage() == null && vaccineType != null) {
             byte[] currentImage = vaccineTypeRepository.findByVaccineTypeId(vaccineTypeRequestDto1.getVaccineTypeId()).getVaccineTypeImage();

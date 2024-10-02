@@ -85,7 +85,6 @@ public class VaccineTypeController {
     public ResponseEntity<String> addVaccineType(@Valid @RequestBody VaccineTypeRequestDto1 vaccineTypeRequestDto1) {
         int result = vaccineTypeService.addVaccineType(vaccineTypeRequestDto1);
     	if (result == 0) {
-
             return ResponseEntity.badRequest().body("cannot add new vaccineType, due to image fault");
         }
         return ResponseEntity.ok("add new vaccine type success!");

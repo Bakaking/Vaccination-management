@@ -21,7 +21,7 @@
                 <label class="form-label fw-medium">Employee Name <span class="text-danger">(*)</span></label>
                 <div class="input-group">
                     <img src="/images/icons/people.png" class="input-group-text border-0">
-                    <input type="text" class="form-control text-capitalize" id="employeeName" maxlength="100">
+                    <input type="text" class="form-control text-capitalize" id="employeeName" maxlength="100" required>
                 </div>
             </div>
             <!--date of birth-->
@@ -67,7 +67,7 @@
                 <label class="form-label fw-medium">Email <span class="text-danger">(*)</span></label>
                 <div class="input-group">
                     <img src="/images/icons/email.png" class="input-group-text border-0">
-                    <input type="email" class="form-control" id="email" maxlength="100">
+                    <input type="email" class="form-control" id="email" maxlength="100" required>
                 </div>
             </div>
             <!--address-->
@@ -83,7 +83,7 @@
         <div class="d-flex mb-4">
             <!--working place-->
             <div class="col-4 me-5">
-                <label class="form-label fw-medium">Working Place</label>
+                <label class="form-label fw-medium">Working Place<span class="text-danger">(*)</span></label>
                 <div class="input-group">
                     <img src="/images/icons/building.png" class="input-group-text border-0">
                     <input type="text" class="form-control text-capitalize" id="workingPlace" maxlength="100" required>
@@ -91,7 +91,7 @@
             </div>
             <!--position-->
             <div class="col-4">
-                <label class="form-label fw-medium">Position</label>
+                <label class="form-label fw-medium">Position<span class="text-danger">(*)</span></label>
                 <div class="input-group">
                     <img src="/images/icons/employee.png" class="input-group-text border-0">
                     <input type="text" class="form-control text-capitalize" id="position" maxlength="100" required>
@@ -111,14 +111,14 @@
         <div class="d-flex justify-content-between mb-4">
             <!--image-->
             <div class="col-4">
-                <label class="form-label fw-medium">Image</label>
+                <label class="form-label fw-medium">Image<span class="text-danger">(*)</span></label>
                 <div class="input-group">
                     <img src="/images/icons/image.png" class="input-group-text border-0">
                     <input type="file" class="form-control" id="image" onchange="previewImage()" required>
                 </div>
             </div>
             <!--username-->
-            <div class="col-4">
+            <div class="col-4" id="username-div">
                 <label class="form-label fw-medium">Username <span class="text-danger">(*)</span></label>
                 <div class="input-group">
                     <img src="/images/icons/id-card.png" class="input-group-text border-0">
@@ -126,7 +126,7 @@
                 </div>
             </div>
             <!--password-->
-            <div class="col-3">
+            <div class="col-3" id="password-div">
                 <label class="form-label fw-medium">Password <span class="text-danger">(*)</span></label>
                 <div class="input-group">
                     <img src="/images/icons/password.png" class="input-group-text border-0">
@@ -156,7 +156,7 @@
                 </button>
             </div>
             <div>
-                <a class="btn btn-warning text-white" onclick="fetchEmployee('employee-list.html')"
+                <a class="btn btn-warning text-white" onclick="pressCancel(); fetchEmployee('employee-list.html');"
                    style="width: 100px;">Cancel</a>
             </div>
         </div>

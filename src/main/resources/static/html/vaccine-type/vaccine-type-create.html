@@ -62,10 +62,10 @@
         <!--        row 3-->
         <div class="d-flex justify-content-between mb-4">
             <div class="col-4">
-                <label class="form-label fw-medium">Image</label>
+                <label class="form-label fw-medium">Image<span class="text-danger">(*)</span></label>
                 <div class="input-group">
                     <img src="/images/icons/image.png" class="input-group-text border-0">
-                    <input type="file" class="form-control" id="image" onchange="previewImage()">
+                    <input type="file" class="form-control" id="image" onchange="previewImage()" required>
                 </div>
             </div>
         </div>

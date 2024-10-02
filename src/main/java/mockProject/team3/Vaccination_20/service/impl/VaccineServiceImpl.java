@@ -142,7 +142,7 @@ public class VaccineServiceImpl implements VaccineService {
         font.setBold(true);
         headerStyle.setFont(font);
 
-        String[] headers = {"Vaccine ID", "Contraindication", "Indication", "Number of Injection", "Vaccine Origin", "Time Begin Next Injection", "Time End Next Injection", "Vaccine Usage", "Vaccine Name", "Status", "Vaccine Type"};
+        String[] headers = {"Contraindication", "Indication", "Number of Injection", "Vaccine Origin", "Time Begin Next Injection", "Time End Next Injection", "Vaccine Usage", "Vaccine Name", "Status", "Vaccine Type"};
         for (int i = 0; i < headers.length; i++) {
             Cell cell = headerRow.createCell(i);
             cell.setCellValue(headers[i]);
@@ -168,7 +168,7 @@ public class VaccineServiceImpl implements VaccineService {
         List<String> notifications = new ArrayList<>(); // List to store notifications
 
         // Define the expected headers
-        String[] expectedHeaders = {"Vaccine ID", "Contraindication", "Indication", "Number of Injection", "Vaccine Origin", "Time Begin Next Injection", "Time End Next Injection", "Vaccine Usage", "Vaccine Name", "Status", "Vaccine Type"};
+        String[] expectedHeaders = {"Contraindication", "Indication", "Number of Injection", "Vaccine Origin", "Time Begin Next Injection", "Time End Next Injection", "Vaccine Usage", "Vaccine Name", "Status", "Vaccine Type"};
 
         // Validate header row
         Row headerRow = sheet.getRow(0);
@@ -199,35 +199,32 @@ public class VaccineServiceImpl implements VaccineService {
 
             // Read and set fields from the row
             if (row.getCell(0) != null) {
-                vaccine.setVaccineId(row.getCell(0).getStringCellValue());
+                vaccine.setContraindication(row.getCell(0).getStringCellValue());
             }
             if (row.getCell(1) != null) {
-                vaccine.setContraindication(row.getCell(1).getStringCellValue());
+                vaccine.setIndication(row.getCell(1).getStringCellValue());
             }
             if (row.getCell(2) != null) {
-                vaccine.setIndication(row.getCell(2).getStringCellValue());
+                vaccine.setNumberOfInjection((int) row.getCell(2).getNumericCellValue());
             }
             if (row.getCell(3) != null) {
-                vaccine.setNumberOfInjection((int) row.getCell(3).getNumericCellValue());
+                vaccine.setVaccineOrigin(row.getCell(3).getStringCellValue());
             }
             if (row.getCell(4) != null) {
-                vaccine.setVaccineOrigin(row.getCell(4).getStringCellValue());
+                vaccine.setTimeBeginNextInjection(row.getCell(4).getLocalDateTimeCellValue().toLocalDate());
             }
             if (row.getCell(5) != null) {
-                vaccine.setTimeBeginNextInjection(row.getCell(5).getLocalDateTimeCellValue().toLocalDate());
+                vaccine.setTimeEndNextInjection(row.getCell(5).getLocalDateTimeCellValue().toLocalDate());
             }
             if (row.getCell(6) != null) {
-                vaccine.setTimeEndNextInjection(row.getCell(6).getLocalDateTimeCellValue().toLocalDate());
+                vaccine.setVaccineUsage(row.getCell(6).getStringCellValue());
             }
             if (row.getCell(7) != null) {
-                vaccine.setVaccineUsage(row.getCell(7).getStringCellValue());
+                vaccine.setVaccineName(row.getCell(7).getStringCellValue());
             }
             if (row.getCell(8) != null) {
-                vaccine.setVaccineName(row.getCell(8).getStringCellValue());
-            }
-            if (row.getCell(9) != null) {
                 try {
-                    vaccine.setVaccineStatus(Status.valueOf(row.getCell(9).getStringCellValue().toUpperCase()));
+                    vaccine.setVaccineStatus(Status.valueOf(row.getCell(8).getStringCellValue().toUpperCase()));
                 } catch (IllegalArgumentException e) {
                     notifications.add("Invalid status at row " + (i + 1) + ". Expected 'ACTIVE' or 'INACTIVE'.");
                     continue;
@@ -235,35 +232,43 @@ public class VaccineServiceImpl implements VaccineService {
             }
 
             // Check for Vaccine Type
-            if (row.getCell(10) != null) {
-                String vaccineTypeId = row.getCell(10).getStringCellValue();
+            if (row.getCell(9) != null) {
+                System.out.println("checkpoint 1");
+                String vaccineTypeId = row.getCell(9).getStringCellValue();
                 VaccineType vaccineType = vaccineTypeRepository.findById(vaccineTypeId).orElse(null);
+                System.out.println(vaccineType.getVaccineTypeId());
                 if (vaccineType != null) {
+                    System.out.println("checkpoint 2");
                     if (vaccineType.getVaccineTypeStatus() == Status.ACTIVE) {
+                        System.out.println("checkpoint 3");
                         vaccine.setVaccineType(vaccineType);
                         vaccines.add(vaccine); // Add to vaccines list
                     } else {
+                        System.out.println("checkpoint 4");
                         // Add a notification if vaccineTypeStatus is INACTIVE
                         notifications.add("Cannot add vaccine at row " + (i + 1) + " because the vaccine type is inactive.");
                     }
                 } else {
+                    System.out.println("checkpoint 5");
                     notifications.add("Cannot add vaccine at row " + (i + 1) + " because the vaccine type was not found.");
                 }
             } else {
+                System.out.println("checkpoint 6");
                 notifications.add("Vaccine type is missing at row " + (i + 1) + ".");
             }
         }
 
         // Save all valid vaccines
         if (!vaccines.isEmpty()) {
-            vaccineRepository.saveAll(vaccines);
+            for(Vaccine vaccine : vaccines) {
+                vaccineRepository.save(vaccine);
+            }
             notifications.add("Successfully imported " + vaccines.size() + " vaccines.");
         }
 
         workbook.close();
         return notifications; // Return notifications to the controller
     }
-
 
     public List<VaccineResponseDto4> findAllVaccineName() {
         try {

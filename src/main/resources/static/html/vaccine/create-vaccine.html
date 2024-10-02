@@ -17,11 +17,11 @@
         <!--            Row 1-->
         <div class="d-flex justify-content-start mb-4">
             <!--                vaccine ID-->
-            <div class="col-4">
+            <div class="col-4 d-none">
                 <label class="form-label fw-medium">Vaccine ID <span class="text-danger">(*)</span></label>
                 <div class="input-group">
                     <img src="/images/icons/vaccination.png" class="input-group-text border-0">
-                    <input type="text" class="form-control" id="vaccineId" required>
+                    <input type="text" class="form-control" id="vaccineId" disabled>
                 </div>
             </div>
             <!--                vaccine status-->
@@ -65,7 +65,7 @@
             </div>
             <!--                number of injection-->
             <div class="col-3">
-                <label class="form-label fw-medium">Number of injection</label>
+                <label class="form-label fw-medium">Number of injection<span class="text-danger">(*)</span></label>
                 <div class="d-flex">
                     <img src="/images/icons/vaccine-bottle.png" class="input-group-text border-0">
                     <div class="input-group">
@@ -78,21 +78,21 @@
         <div class="d-flex justify-content-between mb-4">
             <!--                Usage      -->
             <div class="col-4">
-                <label class="form-label fw-medium">Usage</label>
+                <label class="form-label fw-medium">Usage<span class="text-danger">(*)</span></label>
                 <div class="input-group ps-4">
                     <textarea class="form-control" name="vaccineUsage" id="vaccineUsage" cols="36" rows="3" required></textarea>
                 </div>
             </div>
             <!--                Indication-->
             <div class="col-4">
-                <label class="form-label fw-medium">Indication</label>
+                <label class="form-label fw-medium">Indication<span class="text-danger">(*)</span></label>
                 <div class="input-group ps-4">
                     <textarea class="form-control" name="vaccineUsage" id="vaccineIndication" cols="36" rows="3" required></textarea>
                 </div>
             </div>
             <!--                Contraindication-->
             <div class="col-3">
-                <label class="form-label fw-medium">Contraindication</label>
+                <label class="form-label fw-medium">Contraindication<span class="text-danger">(*)</span></label>
                 <div class="input-group ps-4">
                     <textarea class="form-control" name="vaccineUsage" id="vaccineContraindication" cols="36" rows="3" required></textarea>
                 </div>
@@ -102,7 +102,7 @@
         <div class="d-flex justify-content-between mb-4">
             <!--                Time of beginning next injection-->
             <div class="col-4">
-                <label class="form-label fw-medium">Time of beginning next injection</label>
+                <label class="form-label fw-medium">Time of beginning next injection<span class="text-danger">(*)</span></label>
                 <div class="d-flex">
                     <img src="/images/icons/calendar.png" class="input-group-text border-0">
                     <div class="input-group">
@@ -112,7 +112,7 @@
             </div>
             <!--                Time of ending next injection-->
             <div class="col-4">
-                <label class="form-label fw-medium">Time of ending next injection</label>
+                <label class="form-label fw-medium">Time of ending next injection<span class="text-danger">(*)</span></label>
                 <div class="d-flex">
                     <img src="/images/icons/calendar.png" class="input-group-text border-0">
                     <div class="input-group">
@@ -122,7 +122,7 @@
             </div>
             <!--                Origin-->
             <div class="col-3">
-                <label class="form-label fw-medium">Origin</label>
+                <label class="form-label fw-medium">Origin<span class="text-danger">(*)</span></label>
                 <div class="d-flex">
                     <img src="/images/icons/maps-and-flags.png" class="input-group-text border-0">
                     <div class="input-group">
